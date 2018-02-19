@@ -22,7 +22,7 @@ resource "aws_efs_file_system" "main" {
 # Creates a mount target of EFS in a specified subnet
 # such that our instances can connect to it.
 resource "aws_efs_mount_target" "main" {
-  count = "${length(var.subnets)}"
+  count = "${var.subnets-count}"
 
   file_system_id = "${aws_efs_file_system.main.id}"
   subnet_id      = "${element(var.subnets, count.index)}"
@@ -50,7 +50,7 @@ resource "aws_security_group" "efs" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${data.aws_vpc.default.cidr_block}",
+      "${data.aws_vpc.main.cidr_block}",
     ]
   }
 
@@ -60,7 +60,7 @@ resource "aws_security_group" "efs" {
     protocol  = "tcp"
 
     cidr_blocks = [
-      "${data.aws_vpc.default.cidr_block}",
+      "${data.aws_vpc.main.cidr_block}",
     ]
   }
 
